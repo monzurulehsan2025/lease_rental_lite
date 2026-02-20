@@ -13,7 +13,9 @@ import {
     ArrowRight,
     TrendingUp,
     Download,
-    Share2
+    Share2,
+    MessageSquare,
+    Plus
 } from 'lucide-react';
 import { mockApplicant } from './mockData';
 
@@ -36,6 +38,20 @@ const StatCard = ({ icon: Icon, label, value, color }) => (
 const RiskAssessmentDashboard = () => {
     const [applicant] = useState(mockApplicant);
     const [activeTab, setActiveTab] = useState('overview');
+    const [notes, setNotes] = useState(mockApplicant.internalNotes);
+    const [newNote, setNewNote] = useState('');
+
+    const handleAddNote = () => {
+        if (!newNote.trim()) return;
+        const note = {
+            id: Date.now(),
+            text: newNote,
+            author: "Senior Manager (You)",
+            date: new Date().toISOString().replace('T', ' ').slice(0, 16)
+        };
+        setNotes([note, ...notes]);
+        setNewNote('');
+    };
 
     const getRiskColor = (score) => {
         if (score > 80) return 'var(--success)';
@@ -158,7 +174,7 @@ const RiskAssessmentDashboard = () => {
                 >
                     {/* Navigation Tabs */}
                     <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', background: 'rgba(255,255,255,0.03)', padding: '0.5rem', borderRadius: '1rem', width: 'fit-content' }}>
-                        {['overview', 'factors', 'documents', 'history'].map(tab => (
+                        {['overview', 'factors', 'documents', 'history', 'notes'].map(tab => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
@@ -281,6 +297,57 @@ const RiskAssessmentDashboard = () => {
                                                 <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>{event.date}</div>
                                                 <div style={{ fontWeight: 600 }}>{event.action}</div>
                                                 <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>Initiated by {event.user}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            )}
+                            {activeTab === 'notes' && (
+                                <motion.div
+                                    key="notes"
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -20 }}
+                                    className="flex flex-col gap-6"
+                                >
+                                    <div className="premium-card">
+                                        <h3 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                            <MessageSquare size={18} /> Add Internal Note
+                                        </h3>
+                                        <textarea
+                                            value={newNote}
+                                            onChange={(e) => setNewNote(e.target.value)}
+                                            placeholder="Type your observations here..."
+                                            style={{
+                                                width: '100%',
+                                                minHeight: '100px',
+                                                background: 'rgba(255,255,255,0.03)',
+                                                border: '1px solid var(--card-border)',
+                                                borderRadius: '0.75rem',
+                                                color: 'white',
+                                                padding: '1rem',
+                                                marginBottom: '1rem',
+                                                fontFamily: 'inherit',
+                                                outline: 'none focus:border-blue-500'
+                                            }}
+                                        />
+                                        <button
+                                            onClick={handleAddNote}
+                                            className="button-primary"
+                                            style={{ alignSelf: 'flex-end' }}
+                                        >
+                                            <Plus size={18} /> Post Note
+                                        </button>
+                                    </div>
+
+                                    <div className="flex flex-col gap-4">
+                                        {notes.map(note => (
+                                            <div key={note.id} className="premium-card" style={{ borderLeft: '3px solid var(--accent-primary)' }}>
+                                                <div className="flex justify-between items-center mb-2">
+                                                    <span style={{ fontWeight: 600, color: 'var(--accent-primary)' }}>{note.author}</span>
+                                                    <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{note.date}</span>
+                                                </div>
+                                                <p style={{ fontSize: '0.95rem' }}>{note.text}</p>
                                             </div>
                                         ))}
                                     </div>
