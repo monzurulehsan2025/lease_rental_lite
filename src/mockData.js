@@ -33,6 +33,11 @@ export const mockApplicant = {
     { date: '2025-02-19 14:15', action: 'Automated credit pull completed', user: 'System' },
     { date: '2025-02-19 14:20', action: 'W-2 verification verified', user: 'Risk Engine v4' },
     { date: '2025-02-19 14:30', action: 'Assigned to Senior EM for final review', user: 'System' },
+  ],
+
+  internalNotes: [
+    { id: 1, text: "Initial automated check passed. Employment confirmed with TechFlow HR.", author: "Automated System", date: "2025-02-19 14:25" },
+    { id: 2, text: "Wait for Prior Landlord Reference before final verdict.", author: "Senior Analyst", date: "2025-02-19 15:45" }
   ]
 };
 
