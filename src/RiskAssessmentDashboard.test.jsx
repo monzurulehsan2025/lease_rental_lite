@@ -64,4 +64,22 @@ describe('RiskAssessmentDashboard', () => {
         expect(badge).toBeInTheDocument();
         expect(badge).toHaveClass('badge-low');
     });
+
+    it('does not add a note when the input is empty', () => {
+        render(<RiskAssessmentDashboard />);
+
+        // Go to notes tab
+        const notesTab = screen.getByText(/notes/i);
+        fireEvent.click(notesTab);
+
+        const postButton = screen.getByText(/Post Note/i);
+        const originalNotesCount = screen.getAllByText(/Senior Manager \(You\)|Senior Analyst|Automated System/i).length;
+
+        // Click post without entering text
+        fireEvent.click(postButton);
+
+        // Count should remain the same
+        const newNotesCount = screen.getAllByText(/Senior Manager \(You\)|Senior Analyst|Automated System/i).length;
+        expect(newNotesCount).toBe(originalNotesCount);
+    });
 });
